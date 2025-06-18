@@ -60,9 +60,16 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'Departments',
+        to: '/base/departments',
+      },
+  
+      {
+        component: CNavItem,
         name: 'Breadcrumb',
         to: '/base/breadcrumbs',
       },
+      
       {
         component: CNavItem,
         name: (

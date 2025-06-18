@@ -12,7 +12,9 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const flash = require('connect-flash');
 const cors = require('cors');
 
+// Models
 const User = require('./models/Users');
+const departmentsController = require('./controllers/departmentsController'); // Import departmentsController
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
@@ -62,12 +64,18 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
-app.get('/home', (req, res) => {
+app.get('/home', authenticateToken, (req, res) => {
   res.status(200).json({ message: 'Welcome to the Home Page!' });
 });
 
-const port = 8081;
-sequelize.sync({ force: true }).then(() => {
-  app.listen(port);
-}).catch((error) => {});
+// Mount departmentsController under /api
+app.use('/api', departmentsController);
+
+const port = process.env.PORT || 8081;
+sequelize.sync({ force: false }).then(() => {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}).catch((error) => {
+  console.error('Unable to connect to the database:', error);
+});
